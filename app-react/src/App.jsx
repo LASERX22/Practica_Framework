@@ -6,7 +6,8 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [favoritesCount, setFavoritesCount] = useState(0);
+  
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -24,8 +25,14 @@ function App() {
       });
   }, []);
 
-  const handleFavorite = (userId) => {
-    setFavoritesCount(prev => prev + 1);
+  const toggleFavorite = (userId) => {
+    setFavorites(prevFavorites => {
+      if (prevFavorites.includes(userId)) {
+        return prevFavorites.filter(id => id !== userId);
+      } else {
+        return [...prevFavorites, userId];
+      }
+    });
   };
 
   const filteredUsers = users.filter(user => 
@@ -38,8 +45,9 @@ function App() {
   return (
     <div style={{ padding: '20px' }}>
       <h1>Directorio de Usuarios</h1>
-      <h3>Favoritos: {favoritesCount}</h3>
-
+      
+      <h3>Favoritos: {favorites.length}</h3>
+      
       <input 
         type="text" 
         placeholder="Buscar por nombre..." 
@@ -50,7 +58,12 @@ function App() {
 
       <div>
         {filteredUsers.map(user => (
-          <UserCard key={user.id} user={user} onFavorite={handleFavorite} />
+          <UserCard 
+            key={user.id} 
+            user={user} 
+            isFavorite={favorites.includes(user.id)} 
+            onToggleFavorite={toggleFavorite} 
+          />
         ))}
         {filteredUsers.length === 0 && <p>No se encontraron usuarios.</p>}
       </div>

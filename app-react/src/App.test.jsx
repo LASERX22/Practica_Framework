@@ -10,7 +10,7 @@ test('Renderiza el nombre del usuario en la tarjeta', () => {
     address: { city: 'Cuenca' }
   };
 
-  render(<UserCard user={mockUser} onFavorite={() => {}} />);
+  render(<UserCard user={mockUser} isFavorite={false} onToggleFavorite={() => {}} />);
  
   expect(screen.getByText('Joey Diaz')).toBeDefined();
 });
